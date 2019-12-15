@@ -5,20 +5,28 @@
 using namespace std;
 int main()
 {
-	freopen("mul.in","w",stdout);
-	int n=1000;
-	printf("%d\n",n);
+	FILE *f=fopen("mul.in","wb");
+	int n=8192;
+    fwrite(&n,sizeof(n),1,f);
 	for(int i=1;i<=n;i++)
 	{
 		for(int j=1;j<=n;j++)
-			printf("%d ",rand()%10);
-		printf("\n");
+        {
+            int x=rand()%10;
+            fwrite(&x,sizeof(x),1,f);
+        }
+        char ch = '\n';
+        fwrite(&ch,sizeof(ch),1,f);
 	}
 	for(int i=1;i<=n;i++)
 	{
 		for(int j=1;j<=n;j++)
-			printf("%d ",rand()%10);
-		printf("\n");
+        {
+            int x=rand()%10;
+            fwrite(&x,sizeof(x),1,f);
+        }
+        char ch = '\n';
+        fwrite(&ch,sizeof(ch),1,f);
 	}
 	return 0;
 }

@@ -27,10 +27,11 @@ void get_input(int &n, db **&a, db **&b)
 	int my_rank, comm_sz;
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
+    FILE *f;
 	if(my_rank == 0)
 	{
-		freopen("mul.in","r",stdin);
-		scanf("%d",&n);
+        f = fopen("mul.in","rb");
+        fread(&n,sizeof(n),1,f);
 		MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	}
 	else
@@ -67,11 +68,9 @@ void get_input(int &n, db **&a, db **&b)
 			b[i] = new db[n];
 		}
 		for(int i=0;i<n;i++)
-			for(int j=0;j<n;j++)
-				scanf("%lf",&a[i][j]);
+            fread(a[i],sizeof(db),n,f);
 		for(int i=0;i<n;i++)
-			for(int j=0;j<n;j++)
-				scanf("%lf",&b[i][j]);
+            fread(b[i],sizeof(db),n,f);
 		printf("initialization finished\n");
 	}
 }
@@ -132,12 +131,14 @@ int main()
 			MPI_Recv(buf, k*k, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 			buf_to_mat(local_b, buf, 0, k-1, 0, k-1);
 		}
+        int start = clock();
 		for(int i=0;i<k;i++)
 			for(int j=0;j<k;j++)
 				for(int l=0;l<k;l++)
 					local_c[i][l]+=local_a[i][j]*local_b[j][l];
+        int end = clock();
 		if(my_rank==0)
-			printf("step #%d finished\n", i);
+			printf("step #%d finished , time=%.4fs\n", i, (end-start)/double(CLOCKS_PER_SEC));
 	}
 	db **c = new db*[n];
 	for(int i=0;i<n;i++)
@@ -155,13 +156,13 @@ int main()
 			int y = i%sqrtp;
 			buf_to_mat(c, buf, x*k, (x+1)*k-1, y*k, (y+1)*k-1);
 		}
-		freopen("mul.out","w",stdout);
-		for(int i=0;i<n;i++)
-		{
-			for(int j=0;j<n;j++)
-				printf("%.0f ", c[i][j]);
-			printf("\n");
-		}
+//		freopen("mul.out","w",stdout);
+//		for(int i=0;i<n;i++)
+//		{
+//			for(int j=0;j<n;j++)
+//				printf("%.0f ", c[i][j]);
+//			printf("\n");
+//		}
 	}
 	else
 	{

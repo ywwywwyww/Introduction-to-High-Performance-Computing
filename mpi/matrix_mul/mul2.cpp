@@ -2,7 +2,7 @@
 #include<cstring>
 using namespace std;
 typedef double db;
-const int N=1010;
+const int N=10010;
 db a[N][N],b[N][N],c[N][N];
 int main()
 {
