@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	FILE *f=fopen("mul.in","wb");
-	int n=8192;
+	int n=14400;
     fwrite(&n,sizeof(n),1,f);
 	for(int i=1;i<=n;i++)
 	{
